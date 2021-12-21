@@ -1,11 +1,16 @@
+let num = Math.floor(Math.random()*20)
+
 let arr =[]
 
-function findEven(num){
-    for(let i = 4 ; i < num ; i++){
+function findEven(){
+  if(num > 4){
+      for(let i = 4 ; i < num ; i++){
         if (i % 2 == 0) {
             arr.push(i)
         }
     }
+  }
+    
 }
-
-console.log(findEven(10),arr)
+findEven()
+console.log(arr)
