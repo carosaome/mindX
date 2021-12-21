@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +8,37 @@
     <title>Document</title>
 </head>
 <style>
-    div{
+    div {
         background-color: red;
         width: 200px;
         height: 200px;
-    }
-    div:hover{
-        background-color: blue;
-    }
-</style>
-<body>
-    
-    <div id="div"></div>
 
+
+    }
+
+    /* div:hover{
+        background-color: blue;
+    } */
+</style>
+
+<body>
+
+    <div id="div"></div>
+    <script>
+
+        let item = document.getElementById('div');
+        item.addEventListener("mouseover",()=>{
+          item.setAttribute("style", "background-color:blue;")
+        })
+       
+        item.addEventListener("mouseout",()=>{
+            item.setAttribute("style", "background-color: '';" )
+        })
+
+       
+
+
+    </script>
 </body>
+
 </html>
