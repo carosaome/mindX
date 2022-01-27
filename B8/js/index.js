@@ -14,13 +14,14 @@ class App {
     firebase.auth().onAuthStateChanged((user) => {
       let screen;
       if (user && user.emailVerified) {
+        // TODO: ChungBT remove comment and remove MainScreen
         screen = new InfoScreen();
+        // screen = new LoginScreen();
       } else if (user && !user.emailVerified) {
         screen = new CheckEmailScreen();
       } else {
         screen = new LoginScreen();
       }
-      console.log(user);
       this.changeActiveScreen(screen);
     });
   }

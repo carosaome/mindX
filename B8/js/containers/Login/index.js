@@ -75,7 +75,6 @@ class LoginScreen {
       this.$email.setError("");
     }
     if (checkPassword(password.value) !== null) {
-      console.log("Pwd khong hop le");
       this.$password.setError(checkPassword(password.value));
       isError = true;
     } else {

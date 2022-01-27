@@ -1,4 +1,7 @@
-export function success(title = "Good job!", text = "Proident esse adipisicing.") {
+export function success(
+  title = "Good job!",
+  text = "Proident esse adipisicing."
+) {
   Swal.fire({
     title,
     text,
@@ -42,4 +45,20 @@ export function question(
     text,
     icon: "question",
   });
+}
+
+export async function confirm(title, titleSuccess, callbackFn) {
+  const result = await Swal.fire({
+    title,
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  });
+  if (result.isConfirmed) {
+    await callbackFn();
+    Swal.fire("Deleted!", titleSuccess, "success");
+  }
 }

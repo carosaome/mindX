@@ -1,7 +1,15 @@
+import { checkName, checkPhone } from "../../common/validation.js";
 import ButtonComponent from "../../components/button.js";
 import InputComponent from "../../components/input.js";
 import { getCurrentUser } from "../../firebase/auth.js";
-import { createUser, getUserByEmail } from "../../firebase/store.js";
+import {
+  createUser,
+  getUserByEmail,
+  updateUser,
+} from "../../firebase/store.js";
+import MainScreen from "../Main/index.js";
+import appContainer from "../../index.js";
+import * as _noti from "../../common/notify.js";
 
 class InfoScreen {
   $container;
@@ -19,7 +27,7 @@ class InfoScreen {
 
   $btnSubmit;
 
-  $existUser;
+  $userId;
 
   constructor() {
     this.$container = document.createElement("div");
@@ -82,7 +90,7 @@ class InfoScreen {
     const user = getCurrentUser();
     const userStore = await getUserByEmail(user.email);
     if (userStore) {
-      this.$existUser = true;
+      this.$userId = userStore.id;
 
       this.$name.setAttribute("value", userStore.name);
       this.$phone.setAttribute("value", userStore.phone);
@@ -90,7 +98,7 @@ class InfoScreen {
 
       this.$avatar.style.backgroundImage = `url(${userStore.imageUrl})`;
     } else {
-      this.$existUser = false;
+      this.$userId = "";
     }
   }
 
@@ -98,11 +106,52 @@ class InfoScreen {
     this.$avatar.style.backgroundImage = `url(${e.target.value})`;
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const { name, phone, imageUrl } = e.target;
-    const user = getCurrentUser();
-    createUser(user.email, "", name.value, phone.value, imageUrl.value);
+  handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const { name, phone, imageUrl } = e.target;
+      const user = getCurrentUser();
+      let isError = false;
+      if (checkName(name.value)) {
+        isError = true;
+        this.$name.setError(checkName(name.value));
+      } else {
+        this.$name.setError("");
+      }
+      if (checkPhone(phone.value)) {
+        isError = true;
+        this.$phone.setError(checkPhone(phone.value));
+      } else {
+        this.$phone.setError("");
+      }
+
+      if (isError) {
+        return;
+      }
+
+      if (this.$userId) {
+        await updateUser(
+          this.$userId,
+          user.email,
+          name.value,
+          phone.value,
+          imageUrl.value
+        );
+      } else {
+        await createUser(
+          user.email,
+          "",
+          name.value,
+          phone.value,
+          imageUrl.value
+        );
+      }
+
+      const newMain = new MainScreen();
+      appContainer.changeActiveScreen(newMain);
+    } catch (error) {
+      _noti.error(error.code, error.message);
+    }
   };
 
   render(appEle) {
